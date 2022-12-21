@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { BrandURL } from "../utils/constants"
 
 export default function Home() {
 	return (
@@ -23,8 +24,7 @@ export default function Home() {
 const ApplicationHeader = () => {
 	return (
 		<div>
-			<img 
-			<p>Logo Here</p>
+			<img src={BrandURL} width="100" height="54"/>
 			<p>Search Bar here</p>
 		</div>
 	)
@@ -37,7 +37,7 @@ type ElementSVGProps = {
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
 		<svg width="75" height="75">
-			 <circle cx="35" cy="35" r="15" stroke={fill} stroke-width="15" fill="none" />
+			<circle cx="35" cy="35" r="15" stroke={fill} stroke-width="15" fill="none" />
 		</svg>	
 	)
 }
@@ -99,7 +99,7 @@ const PersonalityTraitList = () => {
 		let results = []
 
 		results.push(
-			<li>
+		<li>
 				<PersonalityTraitCell />
 			</li>
 		)
@@ -137,7 +137,7 @@ const AdjectivesList = ({ list }: AdjectivesListProps) => {
 
 	return (
 		<div>
-			<h3>Adjectives</h3>
+		<h3>Adjectives</h3>
 			<p>{content}</p>
 		</div>
 	)
@@ -148,6 +148,8 @@ const ProfileContent = () => {
 	// TODO: css module 
 	return (
 		<div>
+			<ProfileHeader />
+			<hr/>
 			<PersonalitySummaryTable />
 			<hr/>
 			<EndorsedElementsGrid />
@@ -160,8 +162,8 @@ const ProfileContent = () => {
 const ProfileHeader = () => {
 	return (
 		<div>
-			<h1>Name</h1>
-			<h2>URL</h2>
+		<h1>Name</h1>
+		<h2>URL</h2>
 		</div>
 	)
 }
@@ -188,9 +190,8 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
 	src = "https://randomuser.me/api/portraits/women/81.jpg"
 
 	return (
-		<div className="relative w-24 h-24">
-			<img className="rounded-full border border-gray-100 shadow-sm" src={src} />
-			<div className="absolute top-0 right-0 h-6 w-6 my-1 border-4 border-white rounded-full bg-gray-300 z-2"></div>
+		<div className="relative w-48 h-48">
+			<img className="rounded-full shadow-sm" src={src} />
 		</div>
 	)
 }
