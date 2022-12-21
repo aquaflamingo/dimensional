@@ -40,9 +40,11 @@ type ElementSVGProps = {
 
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
-		<svg width="75" height="75">
-			<circle cx="35" cy="35" r="15" stroke={fill} strokeWidth="15" fill="none" />
-		</svg>	
+		<div className="content-center" >
+			<svg width="100" height="100">
+				<circle cx="60" cy="50" r="20" stroke={fill} strokeWidth="20" fill="none" />
+			</svg>	
+		</div>
 	)
 }
 
@@ -55,9 +57,9 @@ const ElementCell = ({ element, fill }: ElementCellProps) => {
 	// TODO: border
 	// TODO style
 	return (
-		<div>
+		<div className="border-solid border-2 py-3">
 			<ElementSVG fill={fill}/>
-			<p>{element}</p>
+			<p className="text-center">{element}</p>
 		</div>
 	)
 }
@@ -73,53 +75,86 @@ type EndorsedElementsGridProps = {
 }
 
 const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
+	elements = [{name: "One", hexCodes: ["#fff"]}, {name: "Two", hexCodes: ["#f1f"]}]
 
 	// TODO: grid styling
-	return (
-		<div>
-			<ElementCell element="First" fill="#fff"/>
-			<ElementCell element="Second" fill="#1f1"/>
-		</div>
-	)
-}
-
-const PersonalityTraitCell = () => {
-	return (
-		<div>
-			<div>
-				<p>Left aligned</p>
-			</div>
-			<div>
-				<p>Right aligned</p>
-			</div>
-		</div>
-	)
-}
-
-const PersonalityTraitList = () => {
-	// TODO model each item
-	// TODO: default state without traits
-	const renderCells = (items : any[]) => {
+	const renderCells = (elements : Element[]) => {
 		let results = []
 
-		results.push(
-		<li>
-				<PersonalityTraitCell />
-			</li>
-		)
+		for (var t of elements) {
+			results.push(
+				<li>
+					<ElementCell element={t.name} fill={t.hexCodes[0]}/>
+				</li>
+			)
+		}
 
 		return results
 	}
 
 	return (
-		<ul>
-			{ renderCells([]) }
+		<div className="grid grid-cols-6">
+			{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
+		</div>
+	)
+}
+
+type PersonalityTraitCellProps = {
+	traitName: string
+	traitValue: string
+}
+
+const PersonalityTraitCell = ({traitName, traitValue}: PersonalityTraitCellProps) => {
+	//TODO fix color
+	// TODO content aligned wrong
+	return (
+		<div className="grid grid-cols-2 border-solid border-2 border-sky-500">
+			<div className="content-start">
+				<p>{traitName}</p>
+			</div>
+			<div className="content-end">
+				<p>{traitValue}</p>
+			</div>
+		</div>
+	)
+}
+
+type Trait = {
+	traitName: string 
+	traitValue: string
+}
+
+const PersonalityTraitList = ({ traitList } : PersonalitySummaryTableProps) => {
+	// TODO model each item
+	// TODO: default state without traits
+	const renderCells = (traits : Trait[]) => {
+		let results = []
+
+		for (var t of traits) {
+			results.push(
+				<li>
+					<PersonalityTraitCell traitName={t.traitName} traitValue={t.traitValue}/>
+				</li>
+			)
+		}
+
+		return results
+	}
+
+	//TODO: list style
+	return (
+		<ul className="list-none">
+			{ renderCells([{traitName: "one", traitValue:"two"}]) }
 		</ul>
 	)
 }
 
-const PersonalitySummaryTable = () => {
+type PersonalitySummaryTableProps = {
+	// Trait => value
+	traitList: Map<string, string>
+}
 
+const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) => {
 	// TODO: header background white
 	// TODO items
 	return (
@@ -127,7 +162,7 @@ const PersonalitySummaryTable = () => {
 			<div>
 				<h3>Personality Summary</h3>
 			</div>
-			<PersonalityTraitList />
+			<PersonalityTraitList traitList={traitList}/>
 		</div>
 	)
 }
@@ -137,21 +172,28 @@ type AdjectivesListProps = {
 }
 
 const AdjectivesList = ({ list }: AdjectivesListProps) => {
-	let content = "Strong, proud, TODO"
-
 	return (
 		<div>
 		<h3>Adjectives</h3>
-			<p>{content}</p>
+			<p>{list && list.length > 0 ? list.join(", ") : "No adjectives given"}</p>
 		</div>
 	)
 }
 
-const ProfileContent = () => {
+// TODO: Profile
+
+type Profile = {}
+
+type ProfileContentProps = {
+	content: Profile
+}
+
+const ProfileContent = ({ content }: ProfileContentProps) => {
 	// TODO: hooks
 	// TODO: css module 
+	// TODO content
 	return (
-		<div>
+		<div className="col-span-3">
 			<ProfileHeader />
 			<hr/>
 			<PersonalitySummaryTable />
@@ -163,11 +205,16 @@ const ProfileContent = () => {
 	)
 }
 
-const ProfileHeader = () => {
+type ProfileHeaderProps = {
+	userName: string 
+	profileUrl: string 
+}
+
+const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
 	return (
 		<div>
-		<h1>Name</h1>
-		<h2>URL</h2>
+			<h1>{userName}</h1>
+			<h2>{profileUrl}</h2>
 		</div>
 	)
 }
@@ -177,26 +224,19 @@ const Profile = (id: string) => {
 
 	const [profile, setProfile] = useState()
 
-
 	const { get, response, loading, error } = useFetch(Base, {mode: 'no-cors'})
 
 	useEffect(() => { initializeProfile() }, []) // componentDidMount
   
   async function initializeProfile() {
-		const r = await get(ListProfiles)
-		console.log("results", r)
     const prof = await get(GetProfileSummary(id))
     if (response.ok) setProfile(prof)
-		// Handle error
   }
 
 	return (
 		<div className="grid grid-cols-4">
-			<ProfileSummary className="col-span-3"/>
-
-			<div className="col-span-3">
-				<ProfileContent/>
-			</div>
+			<ProfileSummary />
+			<ProfileContent />
 		</div>
 	)
 }
@@ -215,11 +255,16 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
 	)
 }
 
-const ProfileSummary = () => {
+type ProfileSummaryProps = {
+	profileImage: string 
+	description: string
+}
+
+const ProfileSummary = ({ profileImage, description }: ProfileSummaryProps) => {
 	return (
-		<div>
-			<ProfileImage src={""}/>
-			<p>Description of profile</p>
+		<div className="col-span-1">
+			<ProfileImage src={profileImage}/>
+			<p>{description ?  description : "No description provided" }</p>
 		</div>
 	)
 }
