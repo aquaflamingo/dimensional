@@ -1,6 +1,10 @@
+import { useState } from "react"
 import Head from 'next/head'
+import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
 import { BrandURL } from "../utils/constants"
+import { Base, GetProfileSummary, ListProfiles } from "../utils/urls"
+import useFetch from 'use-http'
 
 export default function Home() {
 	return (
@@ -14,7 +18,7 @@ export default function Home() {
 			<main className={styles.main}>
 				<div className="container mx-auto">
 					<ApplicationHeader/>
-					<ProfileContainer/>
+					<Profile/>
 				</div>
 			</main>
 		</>
@@ -37,7 +41,7 @@ type ElementSVGProps = {
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
 		<svg width="75" height="75">
-			<circle cx="35" cy="35" r="15" stroke={fill} stroke-width="15" fill="none" />
+			<circle cx="35" cy="35" r="15" stroke={fill} strokeWidth="15" fill="none" />
 		</svg>	
 	)
 }
@@ -168,12 +172,27 @@ const ProfileHeader = () => {
 	)
 }
 
-const ProfileContainer = () => {
+const Profile = (id: string) => {
+	id = ""
+
+	const [profile, setProfile] = useState()
+
+
+	const { get, response, loading, error } = useFetch(Base, {mode: 'no-cors'})
+
+	useEffect(() => { initializeProfile() }, []) // componentDidMount
+  
+  async function initializeProfile() {
+		const r = await get(ListProfiles)
+		console.log("results", r)
+    const prof = await get(GetProfileSummary(id))
+    if (response.ok) setProfile(prof)
+		// Handle error
+  }
+
 	return (
 		<div className="grid grid-cols-4">
-			<div>
-				<ProfileSummary/>
-			</div>
+			<ProfileSummary className="col-span-3"/>
 
 			<div className="col-span-3">
 				<ProfileContent/>
