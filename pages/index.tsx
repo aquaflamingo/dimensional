@@ -279,6 +279,17 @@ const Profile = (id: string) => {
 	//
 	// }
 
+	useEffect(() => {
+		fetch(`${BaseURL}${ListProfiles}`)
+			.then((res) => res.json())
+		.then((res) => {
+			console.log("Response", res)
+		}).catch((err) => {
+				console.error("Failed to fetch")
+				console.error(err)
+		})
+	}, [])
+
 	return (
 	 <Provider url={BaseURL}>
       <Suspense fallback='Loading...'>
