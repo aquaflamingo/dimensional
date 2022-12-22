@@ -5,6 +5,11 @@ import styles from '../styles/Home.module.css'
 import { BrandURL } from "../utils/constants"
 import { BaseURL, GetProfileSummary, ListProfiles } from "../utils/urls"
 import useFetch, { Provider } from 'use-http'
+import {
+	Profiles, 
+	PersonalitySummary,
+	Traits 
+} from "../fixtures"
 
 export default function Home() {
 	return (
@@ -190,7 +195,7 @@ type AdjectivesListProps = {
 const AdjectivesList = ({ list }: AdjectivesListProps) => {
 	return (
 		<div>
-			<h3>Adjectives</h3>
+		<h3>Adjectives</h3>
 			<p>{list && list.length > 0 ? list.join(", ") : "No adjectives given"}</p>
 		</div>
 	)
@@ -228,77 +233,36 @@ type ProfileHeaderProps = {
 const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
 	return (
 		<div>
-		<h1>{userName}</h1>
-		<h2>{profileUrl}</h2>
+			<h1>{userName}</h1>
+			<h2>{profileUrl}</h2>
 		</div>
 	)
 }
 
 type UserProfileResponse = {
- description: string
- userName: string
- profileUrl: string
- adjectives: string[]
- id: string
- mostEndorsedElements: Element[] 
+	description: string
+	userName: string
+	profileUrl: string
+	adjectives: string[]
+	id: string
+	mostEndorsedElements: Element[] 
 }
 
 
-const Profile = (id: string) => {
-	id = ""
-
-	const [profile, setProfile] = useState()
-	const [applicationError, setApplicationError] = useState()
-
-	// const { get, response, loading, error } = useFetch(BaseURL, {mode: 'no-cors', suspense: true})
-	//
-	// useEffect(() => { initializeProfile() }, []) // componentDidMount
-	//
-	// async function initializeProfile() {
-	// 	console.log("Fetching profiles...")
-	// 	const resp = await get(ListProfiles)
-	// 	console.log("resp was", resp)
-	//
-	// 	if (response.ok) { 
-	// 		console.log(resp)
-	// 		try {
-	// 			const profile = await response.body()
-	// 			console.log("Retrieved:", profile)
-	// 		} catch (err) {
-	// 			console.log("error")
-	// 			console.error(err)
-	// 		}
-	//
-	// 		// console.log("Fetching personality...")
-	// 		// const personality = await get(GetProfileSummary(prof.id))
-	// 		// console.log("Retrieved", personality)
-	// 	} else {
-	// 		console.log("Error", error)
-	// 		setApplicationError(error)
-	// 	}
-	//
-	// }
-
+const Profile = () => {
 	useEffect(() => {
-		fetch(`${BaseURL}${ListProfiles}`)
-			.then((res) => res.json())
-		.then((res) => {
-			console.log("Response", res)
-		}).catch((err) => {
-				console.error("Failed to fetch")
-				console.error(err)
-		})
-	}, [])
+
+		}, [])
 
 	return (
-	 <Provider url={BaseURL}>
-      <Suspense fallback='Loading...'>
-			<div className="grid grid-cols-4">
-				<ProfileSummary />
-				<ProfileContent />
-			</div>
-		</Suspense>
-	</Provider>
+		<Provider url={BaseURL}>
+			<Suspense fallback='Loading...'>
+				<div className="grid grid-cols-4">
+					<ProfileSummary />
+					<ProfileContent />
+				</div>
+			</Suspense>
+		</Provider>
 	)
 }
 
