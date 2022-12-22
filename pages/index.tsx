@@ -56,7 +56,7 @@ type ElementSVGProps = {
 
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
-		<div className="flex w-full justify-center" >
+		<div className="flex md:w-full justify-center" >
 			<svg width="50" height="50">
 				<circle cx="25" cy="25" r="10" stroke={fill} strokeWidth="10" fill="none" />
 			</svg>	
@@ -72,11 +72,9 @@ type ElementCellProps = {
 const ElementCell = ({ element, fill }: ElementCellProps) => {
 	// TODO style
 	return (
-		<div className="border-solid border-2"> 
-			<div className="h-36">
-				<ElementSVG fill={fill}/>
-				<p className="text-center">{element}</p>
-			</div>
+		<div className="box-border h-32 p-4 border-2"> 
+			<ElementSVG fill={fill}/>
+			<p className="text-center text-xs">{element}</p>
 		</div>
 	)
 }
@@ -92,9 +90,7 @@ type EndorsedElementsGridProps = {
 	elements: Element[]
 }
 
-const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
-
-	// TODO: grid styling
+const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
 	const renderCells = (elements : Element[]) => {
 		let results = []
 
@@ -115,7 +111,7 @@ const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
 	return (
 		<div>
 			<h3 className="text-lg">Most Endorsed Elements</h3>
-			<div className="grid grid-cols-6 gap-2">
+			<div className="md:grid md:grid-cols-6 md:gap-2">
 				{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
 			</div>
 		</div>
@@ -141,11 +137,11 @@ const PersonalityTraitCell = ({trait}: PersonalityTraitCellProps) => {
 	}
 
 	return (
-		<div className="grid grid-cols-2 py-2 border-solid border-2 border-grey-500">
-			<div className="content-start px-2">
+		<div className="grid grid-cols-2 py-2 border-solid border-2 border-sky-50">
+			<div className="text-left px-2">
 				<p>{trait.traitName}</p>
 			</div>
-			<div className="content-end px-2">
+			<div className="text-right px-2">
 				<p>{renderTraitValue(trait.traitValues)}</p>
 			</div>
 		</div>
@@ -163,9 +159,6 @@ interface Trait {
 }
 
 const PersonalityTraitList = ({ traits } : PersonalitySummaryTableProps) => {
-	// TODO model each item
-	// TODO: default state without traits
-		console.log("traits inside", traits)
 	const renderCells = (traits : Trait[]) => {
 
 		let results = []
@@ -183,22 +176,18 @@ const PersonalityTraitList = ({ traits } : PersonalitySummaryTableProps) => {
 		return results
 	}
 
-	//TODO: list style
 	return (
 		<ul className="list-none">
-			{ renderCells(traits) }
+			{ traits && traits.length > 0 ? renderCells(traits) : <p>No traits found</p>}
 		</ul>
 	)
 }
 
 type PersonalitySummaryTableProps = {
-	// Trait => value
 	traits: Trait[]
 }
 
 const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
-	// TODO: header background white
-	// TODO items
 	return (
 		<div>
 			<div>
@@ -247,7 +236,7 @@ const ProfileContent = ({ personality, profile}: ProfileContentProps) => {
 		<div className="col-span-3 py-3 space-y-4">
 			<ProfileHeader userName={profile?.userName} profileUrl={profile?.profileUrl}/>
 			<PersonalitySummaryTable traits={descriptors}/>
-			<EndorsedElementsGrid elements={elements}/>
+			<EndorsedElements elements={elements}/>
 			<AdjectivesList adjectives={adjs}/>
 		</div>
 	)
@@ -304,8 +293,8 @@ const Profile = () => {
 		<Provider url={BaseURL}>
 			<Suspense fallback='Loading...'>
 				{ profile && personality && (
-					<div className="grid grid-cols-4">
-						<ProfileSummary description={profile.description}/>
+					<div className="md:grid md:grid-cols-4 md:gap-5 px-5">
+						<ProfileBio description={profile.description}/>
 						<ProfileContent personality={personality} profile={profile}/>
 					</div>
 				)}
@@ -321,8 +310,8 @@ type ProfileImageProps = {
 const ProfileImage = ({ src }: ProfileImageProps) => {
 	//TODO
 	return (
-		<div className="w-48 h-48">
-			<Image src={src} width="100" height="100" className="rounded-full shadow-sm" alt=""/>
+		<div className="justify-center w-full py-5 flex">
+			<Image src={src} width="150" height="150" className="rounded-full shadow-sm" alt=""/>
 		</div>
 	)
 }
@@ -331,14 +320,14 @@ type ProfileSummaryProps = {
 	description: string
 }
 
-const ProfileSummary = ({ description }: ProfileSummaryProps) => {
+const ProfileBio = ({ description }: ProfileSummaryProps) => {
 	// None given in the API
 	const profileImage = "/profileimage.png"
 
 	return (
 		<div className="col-span-1">
 			<ProfileImage src={profileImage}/>
-			<p>{description ?  description : "No description provided" }</p>
+			<p className="md:text-left sm:text-center">{description ?  description : "No description provided" }</p>
 		</div>
 	)
 }
