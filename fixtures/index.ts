@@ -3,7 +3,7 @@ import PersonalitySummary from "./summary.json"
 import Traits from "./traits.json"
 
 export {
-	Profiles,
-	PersonalitySummary,
-	Traits
+	Profiles as ProfileFixture,
+	PersonalitySummary as PersonalityFixture,
+	Traits as TraitFixture
 }

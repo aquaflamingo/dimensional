@@ -2,14 +2,14 @@ import { useState, Suspense } from "react"
 import Head from 'next/head'
 import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
-import { BrandURL } from "../utils/constants"
 import { BaseURL, GetProfileSummary, ListProfiles } from "../utils/urls"
 import useFetch, { Provider } from 'use-http'
 import {
-	Profiles, 
-	PersonalitySummary,
-	Traits 
+	ProfileFixture, 
+	PersonalityFixture,
+	TraitFixture 
 } from "../fixtures"
+import Image from 'next/image'
 
 export default function Home() {
 	return (
@@ -33,10 +33,10 @@ export default function Home() {
 
 const ApplicationHeader = () => {
 	return (
-		<nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+		<nav className="bg-white px-2 sm:px-4 py-2.5 rounded dark:bg-black">
 			<div className="container flex flex-wrap items-center justify-between mx-auto">
 				<a href="#" className="flex items-center">
-					<img src={BrandURL} width="100" height="54"/>
+					<Image src="/logo.png" width="100" height="54"/>
 				</a>
 				<div className="hidden w-full md:block md:w-auto" id="navbar-default">
 					<ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
@@ -56,9 +56,9 @@ type ElementSVGProps = {
 
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
-		<div className="content-center" >
-			<svg width="100" height="100">
-				<circle cx="60" cy="50" r="20" stroke={fill} strokeWidth="20" fill="none" />
+		<div className="flex w-full justify-center" >
+			<svg width="50" height="50">
+				<circle cx="25" cy="25" r="10" stroke={fill} strokeWidth="10" fill="none" />
 			</svg>	
 		</div>
 	)
@@ -70,21 +70,22 @@ type ElementCellProps = {
 }
 
 const ElementCell = ({ element, fill }: ElementCellProps) => {
-	// TODO: border
 	// TODO style
 	return (
-		<div className="border-solid border-2 py-3">
-			<ElementSVG fill={fill}/>
-			<p className="text-center">{element}</p>
+		<div className="border-solid border-2"> 
+			<div className="h-36">
+				<ElementSVG fill={fill}/>
+				<p className="text-center">{element}</p>
+			</div>
 		</div>
 	)
 }
 
 // Traits and elements are the same?
-type Element = {
+interface Element {
 	name: string
-	hexCodes: string[]
-	score: number | null
+	colorHexCodes: string[]
+	score: number | null 
 }
 
 type EndorsedElementsGridProps = {
@@ -92,18 +93,18 @@ type EndorsedElementsGridProps = {
 }
 
 const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
-	elements = [{name: "One", hexCodes: ["#fff"]}, {name: "Two", hexCodes: ["#f1f"]}]
 
 	// TODO: grid styling
 	const renderCells = (elements : Element[]) => {
 		let results = []
 
-		for (var i in elements) {
+		for (let i=0; i<elements.length; i++) {
 			let t = elements[i]
+			let fill = t.colorHexCodes.length > 0 ? t.colorHexCodes[0] : "#FFF"
 
 			results.push(
-				<li key={i}>
-					<ElementCell element={t.name} fill={t.hexCodes[0]}/>
+				<li className="list-none" key={i}>
+					<ElementCell element={t.name} fill={fill}/>
 				</li>
 			)
 		}
@@ -112,24 +113,26 @@ const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
 	}
 
 	return (
-		<div className="grid grid-cols-6">
-			{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
+		<div>
+			<h3 className="text-lg">Most Endorsed Elements</h3>
+			<div className="grid grid-cols-6 gap-2">
+				{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
+			</div>
 		</div>
 	)
 }
 
 type PersonalityTraitCellProps = {
-	traitName: string
-	traitValue: string
+	trait: Trait
 }
 
-const PersonalityTraitCell = ({traitName, traitValue}: PersonalityTraitCellProps) => {
+const PersonalityTraitCell = ({trait}: PersonalityTraitCellProps) => {
 	//TODO fix color
 	// TODO content aligned wrong
 	return (
-		<div className="grid grid-cols-2 border-solid border-2 border-grey-500">
+		<div className="grid grid-cols-2 py-2 border-solid border-2 border-grey-500">
 			<div className="content-start px-2">
-				<p>{traitName}</p>
+				<p>{trait.traitName}</p>
 			</div>
 			<div className="content-end px-2">
 				<p>{traitValue}</p>
@@ -138,23 +141,29 @@ const PersonalityTraitCell = ({traitName, traitValue}: PersonalityTraitCellProps
 	)
 }
 
-type Trait = {
-	traitName: string 
-	traitValue: string
+interface TraitValue {
+	text: string 
+	highlighted: boolean
 }
 
-const PersonalityTraitList = ({ traitList } : PersonalitySummaryTableProps) => {
+interface Trait {
+	traitName: string 
+	traitValues: TraitValue[]
+}
+
+const PersonalityTraitList = ({ traits } : PersonalitySummaryTableProps) => {
 	// TODO model each item
 	// TODO: default state without traits
 	const renderCells = (traits : Trait[]) => {
+		console.log("traits", traits)
 		let results = []
 
-		for (var i in traits) {
+		for (let i=0; i< traits?.length; i++) {
 			let t = traits[i]
 
 			results.push(
 				<li key={i}>
-					<PersonalityTraitCell traitName={t.traitName} traitValue={t.traitValue}/>
+					<PersonalityTraitCell trait={t} />
 				</li>
 			)
 		}
@@ -165,14 +174,14 @@ const PersonalityTraitList = ({ traitList } : PersonalitySummaryTableProps) => {
 	//TODO: list style
 	return (
 		<ul className="list-none">
-			{ renderCells([{traitName: "one", traitValue:"two"}]) }
+			{ renderCells(traits) }
 		</ul>
 	)
 }
 
 type PersonalitySummaryTableProps = {
 	// Trait => value
-	traitList: Map<string, string>
+	traitList: Trait[]
 }
 
 const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) => {
@@ -181,7 +190,7 @@ const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) =>
 	return (
 		<div>
 			<div>
-				<h3>Personality Summary</h3>
+				<h3 className="text-lg bg-white text-black px-2 py-2">Personality Summary</h3>
 			</div>
 			<PersonalityTraitList traitList={traitList}/>
 		</div>
@@ -189,38 +198,45 @@ const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) =>
 }
 
 type AdjectivesListProps = {
-	list: string[]
+	adjectives: string[]
 }
 
-const AdjectivesList = ({ list }: AdjectivesListProps) => {
+const AdjectivesList = ({ adjectives }: AdjectivesListProps) => {
 	return (
 		<div>
-		<h3>Adjectives</h3>
-			<p>{list && list.length > 0 ? list.join(", ") : "No adjectives given"}</p>
+		<h3 className="text-lg">Adjectives</h3>
+			<p>{adjectives && adjectives.length > 0 ? adjectives.join(", ") : "No adjectives given"}</p>
 		</div>
 	)
 }
 
-// TODO: Profile
-
-type Profile = {}
-
 type ProfileContentProps = {
-	content: Profile
+	// TODO 
+	profile: UserProfileResponse
+	personality: UserPersonalityResponse
 }
 
-const ProfileContent = ({ content }: ProfileContentProps) => {
-	// TODO: hooks
+const ProfileContent = ({ personality, profile}: ProfileContentProps) => {
+	console.log("profile", profile)
+
+	const adjs: string[] = profile?.adjectives
+	const elements: Element[] = profile?.mostEndorsedElements
+	const descriptors: Trait[] = personality.summaryTableRows.map((row)=> {
+		let values: TraitValue[] = row.values.map((v) => {
+			return {text: v.text, highlighted: v.isHighlighted}
+		})
+
+		return {traitName: row.title, traitValues: values}
+	})
+
+
 	// TODO: css module 
-	// TODO content
 	return (
-		<div className="col-span-3">
-			<ProfileHeader />
-			<hr/>
-			<PersonalitySummaryTable />
-			<EndorsedElementsGrid />
-			<hr/>
-			<AdjectivesList />
+		<div className="col-span-3 py-3 space-y-4">
+			<ProfileHeader userName={profile?.userName} profileUrl={profile?.profileUrl}/>
+			<PersonalitySummaryTable traitList={descriptors}/>
+			<EndorsedElementsGrid elements={elements}/>
+			<AdjectivesList adjectives={adjs}/>
 		</div>
 	)
 }
@@ -232,14 +248,14 @@ type ProfileHeaderProps = {
 
 const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
 	return (
-		<div>
-			<h1>{userName}</h1>
-			<h2>{profileUrl}</h2>
+		<div className="space-y-1">
+			<h1 className="text-5xl">{userName}</h1>
+			<h2 className="text-lg">{profileUrl}</h2>
 		</div>
 	)
 }
 
-type UserProfileResponse = {
+interface UserProfileResponse {
 	description: string
 	userName: string
 	profileUrl: string
@@ -248,19 +264,39 @@ type UserProfileResponse = {
 	mostEndorsedElements: Element[] 
 }
 
+interface SummaryTableValue {
+		text: string 
+		isHighlighted: boolean
+}
+
+interface SummaryTableRow {
+		title: string 
+		values: SummaryTableValue[]
+}
+
+interface UserPersonalityResponse {
+	summaryTableRows: SummaryTableRow[]
+}
+
 
 const Profile = () => {
-	useEffect(() => {
+	const [profile, setProfile] = useState<UserProfileResponse>()
+	const [personality, setPersonality] = useState<UserPersonalityResponse>()
 
+	useEffect(() => {
+		setProfile(ProfileFixture[0])
+		setPersonality(PersonalityFixture)
 		}, [])
 
 	return (
 		<Provider url={BaseURL}>
 			<Suspense fallback='Loading...'>
-				<div className="grid grid-cols-4">
-					<ProfileSummary />
-					<ProfileContent />
-				</div>
+				{ profile && personality && (
+					<div className="grid grid-cols-4">
+						<ProfileSummary description={profile.description}/>
+						<ProfileContent personality={personality} profile={profile}/>
+					</div>
+				)}
 			</Suspense>
 		</Provider>
 	)
@@ -271,22 +307,22 @@ type ProfileImageProps = {
 }
 
 const ProfileImage = ({ src }: ProfileImageProps) => {
-	src = "https://randomuser.me/api/portraits/women/81.jpg"
-
+	//TODO
 	return (
 		<div className="w-48 h-48">
-			<img className="rounded-full shadow-sm" src={src} />
+			<Image src={src} width="100" height="100" className="rounded-full shadow-sm" alt=""/>
 		</div>
 	)
 }
 
 type ProfileSummaryProps = {
-	profileImage: string 
 	description: string
 }
 
-const ProfileSummary = ({ profileImage, description }: ProfileSummaryProps) => {
-	// TODO mobile
+const ProfileSummary = ({ description }: ProfileSummaryProps) => {
+	// None given in the API
+	const profileImage = "/profileimage.png"
+
 	return (
 		<div className="col-span-1">
 			<ProfileImage src={profileImage}/>
