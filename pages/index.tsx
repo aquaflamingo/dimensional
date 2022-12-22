@@ -7,9 +7,9 @@ import useFetch, { Provider } from 'use-http'
 import {
 	ProfileFixture, 
 	PersonalityFixture,
-	TraitFixture 
 } from "../fixtures"
 import Image from 'next/image'
+import SearchBar from "../components/Search" 
 
 export default function Home() {
 	return (
@@ -21,7 +21,7 @@ export default function Home() {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className={styles.main}>
-				<div className="container mx-auto">
+				<div className="container mx-auto z-0">
 					<ApplicationHeader/>
 					<Profile/>
 				</div>
@@ -33,17 +33,13 @@ export default function Home() {
 
 const ApplicationHeader = () => {
 	return (
-		<nav className="bg-white px-2 sm:px-4 py-2.5 rounded dark:bg-black">
+		<nav className="bg-white px-2 sm:px-4 py-2.5 rounded dark:bg-black h-32 z-10">
 			<div className="container flex flex-wrap items-center justify-between mx-auto">
 				<a href="#" className="flex items-center">
 					<Image src="/logo.png" width="100" height="54"/>
 				</a>
-				<div className="hidden w-full md:block md:w-auto" id="navbar-default">
-					<ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-						<li>
-							<p>Search Bar here</p>
-						</li>
-					</ul>
+				<div className="w-auto md:block md:w-auto py-5 h-32" id="navbar-default">
+						<SearchBar/>
 				</div>
 			</div>
 		</nav>
@@ -56,9 +52,9 @@ type ElementSVGProps = {
 
 const ElementSVG = ({ fill }: ElementSVGProps) => {
 	return (
-		<div className="flex md:w-full justify-center" >
-			<svg width="50" height="50">
-				<circle cx="25" cy="25" r="10" stroke={fill} strokeWidth="10" fill="none" />
+		<div className="flex w-full justify-center" >
+			<svg width="64" height="64">
+				<circle cx="32" cy="32" r="15" stroke={fill} strokeWidth="24" fill="none" />
 			</svg>	
 		</div>
 	)
@@ -72,7 +68,7 @@ type ElementCellProps = {
 const ElementCell = ({ element, fill }: ElementCellProps) => {
 	// TODO style
 	return (
-		<div className="box-border h-32 p-4 border-2"> 
+		<div className="box-border h-32 p-4 border-2 md:w-32"> 
 			<ElementSVG fill={fill}/>
 			<p className="text-center text-xs">{element}</p>
 		</div>
@@ -80,7 +76,7 @@ const ElementCell = ({ element, fill }: ElementCellProps) => {
 }
 
 // Traits and elements are the same?
-interface Element {
+export interface Element {
 	name: string
 	colorHexCodes: string[]
 	score: number | null 
@@ -111,9 +107,9 @@ const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
 	return (
 		<div>
 			<h3 className="text-lg">Most Endorsed Elements</h3>
-			<div className="md:grid md:grid-cols-6 md:gap-2">
-				{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
-			</div>
+				<div className="md:grid md:grid-cols-6 md:gap-2 flex overflow-x-auto gap-2">
+						{ elements && elements.length > 0 ? renderCells(elements) : "No elements found" }
+				</div>
 		</div>
 	)
 }
@@ -191,7 +187,7 @@ const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
 	return (
 		<div>
 			<div>
-				<h3 className="text-lg bg-white text-black px-2 py-2">Personality Summary</h3>
+				<h3 className="text-lg bg-gray-50 text-black px-2 py-2">Personality Summary</h3>
 			</div>
 			<PersonalityTraitList traits={traits}/>
 		</div>
@@ -218,8 +214,6 @@ type ProfileContentProps = {
 }
 
 const ProfileContent = ({ personality, profile}: ProfileContentProps) => {
-	console.log("profile", profile)
-
 	const adjs: string[] = profile?.adjectives
 	const elements: Element[] = profile?.mostEndorsedElements
 	const descriptors: Trait[] = personality.summaryTableRows.map((row)=> {
@@ -230,10 +224,8 @@ const ProfileContent = ({ personality, profile}: ProfileContentProps) => {
 		return {traitName: row.title, traitValues: values}
 	})
 
-
-	// TODO: css module 
 	return (
-		<div className="col-span-3 py-3 space-y-4">
+		<div className="col-span-3 py-3 space-y-4 px-5 md:px-10">
 			<ProfileHeader userName={profile?.userName} profileUrl={profile?.profileUrl}/>
 			<PersonalitySummaryTable traits={descriptors}/>
 			<EndorsedElements elements={elements}/>
@@ -293,7 +285,7 @@ const Profile = () => {
 		<Provider url={BaseURL}>
 			<Suspense fallback='Loading...'>
 				{ profile && personality && (
-					<div className="md:grid md:grid-cols-4 md:gap-5 px-5">
+					<div className="md:grid md:grid-cols-4 md:gap-5 px-5 z-0">
 						<ProfileBio description={profile.description}/>
 						<ProfileContent personality={personality} profile={profile}/>
 					</div>
@@ -327,7 +319,7 @@ const ProfileBio = ({ description }: ProfileSummaryProps) => {
 	return (
 		<div className="col-span-1">
 			<ProfileImage src={profileImage}/>
-			<p className="md:text-left sm:text-center">{description ?  description : "No description provided" }</p>
+			<p className="md:text-left sm:text-center px-5">{description ?  description : "No description provided" }</p>
 		</div>
 	)
 }
