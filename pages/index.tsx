@@ -127,15 +127,26 @@ type PersonalityTraitCellProps = {
 }
 
 const PersonalityTraitCell = ({trait}: PersonalityTraitCellProps) => {
-	//TODO fix color
-	// TODO content aligned wrong
+	// TODO slashes missing
+	const renderTraitValue = (tv: TraitValue[]) => {
+		let results = tv.map((tv: TraitValue) => {
+			if (tv.highlighted) {
+			return <span className="decoration-gray-50">{tv.text} </span>
+			} else {
+			return <span className="decoration-white">{tv.text} </span>
+			}
+		})
+
+		return results
+	}
+
 	return (
 		<div className="grid grid-cols-2 py-2 border-solid border-2 border-grey-500">
 			<div className="content-start px-2">
 				<p>{trait.traitName}</p>
 			</div>
 			<div className="content-end px-2">
-				<p>{traitValue}</p>
+				<p>{renderTraitValue(trait.traitValues)}</p>
 			</div>
 		</div>
 	)
@@ -154,8 +165,9 @@ interface Trait {
 const PersonalityTraitList = ({ traits } : PersonalitySummaryTableProps) => {
 	// TODO model each item
 	// TODO: default state without traits
+		console.log("traits inside", traits)
 	const renderCells = (traits : Trait[]) => {
-		console.log("traits", traits)
+
 		let results = []
 
 		for (let i=0; i< traits?.length; i++) {
@@ -181,10 +193,10 @@ const PersonalityTraitList = ({ traits } : PersonalitySummaryTableProps) => {
 
 type PersonalitySummaryTableProps = {
 	// Trait => value
-	traitList: Trait[]
+	traits: Trait[]
 }
 
-const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) => {
+const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
 	// TODO: header background white
 	// TODO items
 	return (
@@ -192,7 +204,7 @@ const PersonalitySummaryTable = ({ traitList }: PersonalitySummaryTableProps) =>
 			<div>
 				<h3 className="text-lg bg-white text-black px-2 py-2">Personality Summary</h3>
 			</div>
-			<PersonalityTraitList traitList={traitList}/>
+			<PersonalityTraitList traits={traits}/>
 		</div>
 	)
 }
@@ -234,7 +246,7 @@ const ProfileContent = ({ personality, profile}: ProfileContentProps) => {
 	return (
 		<div className="col-span-3 py-3 space-y-4">
 			<ProfileHeader userName={profile?.userName} profileUrl={profile?.profileUrl}/>
-			<PersonalitySummaryTable traitList={descriptors}/>
+			<PersonalitySummaryTable traits={descriptors}/>
 			<EndorsedElementsGrid elements={elements}/>
 			<AdjectivesList adjectives={adjs}/>
 		</div>
