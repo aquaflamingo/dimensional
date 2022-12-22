@@ -1,10 +1,10 @@
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import Head from 'next/head'
 import { useEffect } from 'react'
 import styles from '../styles/Home.module.css'
 import { BrandURL } from "../utils/constants"
-import { Base, GetProfileSummary, ListProfiles } from "../utils/urls"
-import useFetch from 'use-http'
+import { BaseURL, GetProfileSummary, ListProfiles } from "../utils/urls"
+import useFetch, { Provider } from 'use-http'
 
 export default function Home() {
 	return (
@@ -25,12 +25,23 @@ export default function Home() {
 	)
 }
 
+
 const ApplicationHeader = () => {
 	return (
-		<div>
-			<img src={BrandURL} width="100" height="54"/>
-			<p>Search Bar here</p>
-		</div>
+		<nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
+			<div className="container flex flex-wrap items-center justify-between mx-auto">
+				<a href="#" className="flex items-center">
+					<img src={BrandURL} width="100" height="54"/>
+				</a>
+				<div className="hidden w-full md:block md:w-auto" id="navbar-default">
+					<ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+						<li>
+							<p>Search Bar here</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 	)
 }
 
@@ -68,6 +79,7 @@ const ElementCell = ({ element, fill }: ElementCellProps) => {
 type Element = {
 	name: string
 	hexCodes: string[]
+	score: number | null
 }
 
 type EndorsedElementsGridProps = {
@@ -81,9 +93,11 @@ const EndorsedElementsGrid = ({ elements }: EndorsedElementsGridProps) => {
 	const renderCells = (elements : Element[]) => {
 		let results = []
 
-		for (var t of elements) {
+		for (var i in elements) {
+			let t = elements[i]
+
 			results.push(
-				<li>
+				<li key={i}>
 					<ElementCell element={t.name} fill={t.hexCodes[0]}/>
 				</li>
 			)
@@ -108,11 +122,11 @@ const PersonalityTraitCell = ({traitName, traitValue}: PersonalityTraitCellProps
 	//TODO fix color
 	// TODO content aligned wrong
 	return (
-		<div className="grid grid-cols-2 border-solid border-2 border-sky-500">
-			<div className="content-start">
+		<div className="grid grid-cols-2 border-solid border-2 border-grey-500">
+			<div className="content-start px-2">
 				<p>{traitName}</p>
 			</div>
-			<div className="content-end">
+			<div className="content-end px-2">
 				<p>{traitValue}</p>
 			</div>
 		</div>
@@ -130,9 +144,11 @@ const PersonalityTraitList = ({ traitList } : PersonalitySummaryTableProps) => {
 	const renderCells = (traits : Trait[]) => {
 		let results = []
 
-		for (var t of traits) {
+		for (var i in traits) {
+			let t = traits[i]
+
 			results.push(
-				<li>
+				<li key={i}>
 					<PersonalityTraitCell traitName={t.traitName} traitValue={t.traitValue}/>
 				</li>
 			)
@@ -174,7 +190,7 @@ type AdjectivesListProps = {
 const AdjectivesList = ({ list }: AdjectivesListProps) => {
 	return (
 		<div>
-		<h3>Adjectives</h3>
+			<h3>Adjectives</h3>
 			<p>{list && list.length > 0 ? list.join(", ") : "No adjectives given"}</p>
 		</div>
 	)
@@ -197,7 +213,6 @@ const ProfileContent = ({ content }: ProfileContentProps) => {
 			<ProfileHeader />
 			<hr/>
 			<PersonalitySummaryTable />
-			<hr/>
 			<EndorsedElementsGrid />
 			<hr/>
 			<AdjectivesList />
@@ -213,31 +228,66 @@ type ProfileHeaderProps = {
 const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
 	return (
 		<div>
-			<h1>{userName}</h1>
-			<h2>{profileUrl}</h2>
+		<h1>{userName}</h1>
+		<h2>{profileUrl}</h2>
 		</div>
 	)
 }
+
+type UserProfileResponse = {
+ description: string
+ userName: string
+ profileUrl: string
+ adjectives: string[]
+ id: string
+ mostEndorsedElements: Element[] 
+}
+
 
 const Profile = (id: string) => {
 	id = ""
 
 	const [profile, setProfile] = useState()
+	const [applicationError, setApplicationError] = useState()
 
-	const { get, response, loading, error } = useFetch(Base, {mode: 'no-cors'})
-
-	useEffect(() => { initializeProfile() }, []) // componentDidMount
-  
-  async function initializeProfile() {
-    const prof = await get(GetProfileSummary(id))
-    if (response.ok) setProfile(prof)
-  }
+	// const { get, response, loading, error } = useFetch(BaseURL, {mode: 'no-cors', suspense: true})
+	//
+	// useEffect(() => { initializeProfile() }, []) // componentDidMount
+	//
+	// async function initializeProfile() {
+	// 	console.log("Fetching profiles...")
+	// 	const resp = await get(ListProfiles)
+	// 	console.log("resp was", resp)
+	//
+	// 	if (response.ok) { 
+	// 		console.log(resp)
+	// 		try {
+	// 			const profile = await response.body()
+	// 			console.log("Retrieved:", profile)
+	// 		} catch (err) {
+	// 			console.log("error")
+	// 			console.error(err)
+	// 		}
+	//
+	// 		// console.log("Fetching personality...")
+	// 		// const personality = await get(GetProfileSummary(prof.id))
+	// 		// console.log("Retrieved", personality)
+	// 	} else {
+	// 		console.log("Error", error)
+	// 		setApplicationError(error)
+	// 	}
+	//
+	// }
 
 	return (
-		<div className="grid grid-cols-4">
-			<ProfileSummary />
-			<ProfileContent />
-		</div>
+	 <Provider url={BaseURL}>
+      <Suspense fallback='Loading...'>
+			<div className="grid grid-cols-4">
+				<ProfileSummary />
+				<ProfileContent />
+			</div>
+		</Suspense>
+	</Provider>
 	)
 }
 
@@ -249,7 +299,7 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
 	src = "https://randomuser.me/api/portraits/women/81.jpg"
 
 	return (
-		<div className="relative w-48 h-48">
+		<div className="w-48 h-48">
 			<img className="rounded-full shadow-sm" src={src} />
 		</div>
 	)
@@ -261,6 +311,7 @@ type ProfileSummaryProps = {
 }
 
 const ProfileSummary = ({ profileImage, description }: ProfileSummaryProps) => {
+	// TODO mobile
 	return (
 		<div className="col-span-1">
 			<ProfileImage src={profileImage}/>
