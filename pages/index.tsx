@@ -29,7 +29,7 @@ export default function Home() {
 
 const ApplicationHeader = () => {
   return (
-    <nav className="bg-white px-2 sm:px-4 py-2.5 rounded dark:bg-black h-32 z-10">
+    <nav className="px-2 sm:px-4 py-2.5 rounded h-32 z-10">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
         <a href="#" className="flex items-center">
           <Image src="/logo.png" width="100" height="54" />
@@ -112,8 +112,8 @@ const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
 
   return (
     <div>
-      <h3 className="text-lg">Most Endorsed Elements</h3>
-      <div className="md:grid md:grid-cols-6 md:gap-2 flex overflow-x-auto gap-2">
+      <h3 className="text-lg py-2">Most Endorsed Elements</h3>
+      <div className="md:grid md:grid-cols-6 flex overflow-x-auto gap-1">
         {elements && elements.length > 0
           ? renderCells(elements)
           : "No elements found"}
@@ -127,11 +127,11 @@ type PersonalityTraitCellProps = {
 };
 
 const PersonalityTraitCell = ({ trait }: PersonalityTraitCellProps) => {
-  // TODO slashes missing
+  // TODO slashes missing and highlight
   const renderTraitValue = (tv: TraitValue[]) => {
     let results = tv.map((tv: TraitValue) => {
-      if (tv.highlighted) {
-        return <span className="decoration-gray-50">{tv.text} </span>;
+      if (!tv.highlighted) {
+        return <span className="text-gray-500">{tv.text} </span>;
       } else {
         return <span className="decoration-white">{tv.text} </span>;
       }

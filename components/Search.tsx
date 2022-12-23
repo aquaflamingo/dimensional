@@ -11,14 +11,20 @@ const SearchBar = () => {
 
   const mockSearch = (query: string) => {
     //FIXME: this doesn't work
-    return TraitFixture.filter((t) => t.name.includes(query));
+		try {
+		const regex = new RegExp(query, 'i')
+    const results =  TraitFixture.filter((t) => t.name.match(regex))
+		return results
+		} catch {
+			console.error("Failed to compile regex")
+			return []
+		}
   };
 
   const onChange = useCallback((event) => {
     const query = event.target.value;
     setQuery(query);
 
-    // TODO: hooks
     if (query.length) {
       const res = mockSearch(query);
       setResults(res);
