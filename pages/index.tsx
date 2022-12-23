@@ -19,7 +19,7 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className="container mx-auto z-0">
-          <ApplicationHeader />
+          <Navbar />
           <Profile />
         </div>
       </main>
@@ -27,7 +27,7 @@ export default function Home() {
   );
 }
 
-const ApplicationHeader = () => {
+const Navbar = () => {
   return (
     <nav className="px-2 sm:px-4 py-2.5 rounded h-32 z-10">
       <div className="container flex flex-wrap items-center justify-between mx-auto">
@@ -319,7 +319,6 @@ type ProfileImageProps = {
 };
 
 const ProfileImage = ({ src }: ProfileImageProps) => {
-  //TODO
   return (
     <div className="justify-center w-full py-5 flex">
       <Image
