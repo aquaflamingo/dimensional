@@ -96,7 +96,7 @@ export {
 	UserPersonalityResponse,
 	Trait,
 	TraitValue,
-	ProfileImageProps.
+	ProfileImageProps,
 	ProfileHeaderProps,
 	ProfileSummaryProps,
 	ProfileContentProps,

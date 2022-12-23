@@ -1,10 +1,7 @@
 import { useState, Suspense } from "react";
 import Head from "next/head";
 import { useEffect } from "react";
-import styles from "../styles/Home.module.css";
 import { BaseURL, GetProfileSummary, ListProfiles } from "../utils/urls";
-import useFetch, { Provider } from "use-http";
-import { ProfileFixture, PersonalityFixture } from "../fixtures";
 import Image from "next/image";
 import SearchBar from "../components/Search";
 
@@ -17,7 +14,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main>
         <div className="container mx-auto z-0">
           <Navbar />
           <Profile />
@@ -30,7 +27,7 @@ export default function Home() {
 const Navbar = () => {
   return (
     <nav className="px-2 sm:px-4 py-2.5 rounded h-32 z-10">
-      <div className="container flex flex-wrap items-center justify-between mx-auto">
+      <div className="container md:flex flex-wrap items-center md:justify-between mx-auto">
         <a href="#" className="flex items-center">
           <Image src="/logo.png" width="100" height="54" />
         </a>
@@ -81,7 +78,7 @@ const ElementCell = ({ element, fill }: ElementCellProps) => {
   );
 };
 
-// Traits and elements are the same?
+//  and elements are the same?
 export interface Element {
   name: string;
   colorHexCodes: string[];
@@ -122,14 +119,16 @@ const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
   );
 };
 
-type PersonalityTraitCellProps = {
-  trait: Trait;
+type PersonalityDescriptorCellProps = {
+  trait: Descriptor;
 };
 
-const PersonalityTraitCell = ({ trait }: PersonalityTraitCellProps) => {
+const PersonalityDescriptorCell = ({
+  trait,
+}: PersonalityDescriptorCellProps) => {
   // TODO slashes missing and highlight
-  const renderTraitValue = (tv: TraitValue[]) => {
-    let results = tv.map((tv: TraitValue) => {
+  const renderDescriptorValue = (tv: DescriptorValue[]) => {
+    let results = tv.map((tv: DescriptorValue) => {
       if (!tv.highlighted) {
         return <span className="text-gray-500">{tv.text} </span>;
       } else {
@@ -143,27 +142,29 @@ const PersonalityTraitCell = ({ trait }: PersonalityTraitCellProps) => {
   return (
     <div className="grid grid-cols-2 py-2 border-solid border-2 border-sky-50">
       <div className="text-left px-2">
-        <p>{trait.traitName}</p>
+        <p>{trait.name}</p>
       </div>
       <div className="text-right px-2">
-        <p>{renderTraitValue(trait.traitValues)}</p>
+        <p>{renderDescriptorValue(trait.values)}</p>
       </div>
     </div>
   );
 };
 
-interface TraitValue {
+interface DescriptorValue {
   text: string;
   highlighted: boolean;
 }
 
-interface Trait {
-  traitName: string;
-  traitValues: TraitValue[];
+interface Descriptor {
+  name: string;
+  values: DescriptorValue[];
 }
 
-const PersonalityTraitList = ({ traits }: PersonalitySummaryTableProps) => {
-  const renderCells = (traits: Trait[]) => {
+const PersonalityDescriptorList = ({
+  traits,
+}: PersonalitySummaryTableProps) => {
+  const renderCells = (traits: Descriptor[]) => {
     let results = [];
 
     for (let i = 0; i < traits?.length; i++) {
@@ -171,7 +172,7 @@ const PersonalityTraitList = ({ traits }: PersonalitySummaryTableProps) => {
 
       results.push(
         <li key={i}>
-          <PersonalityTraitCell trait={t} />
+          <PersonalityDescriptorCell trait={t} />
         </li>
       );
     }
@@ -191,7 +192,7 @@ const PersonalityTraitList = ({ traits }: PersonalitySummaryTableProps) => {
 };
 
 type PersonalitySummaryTableProps = {
-  traits: Trait[];
+  traits: Descriptor[];
 };
 
 const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
@@ -202,7 +203,7 @@ const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
           Personality Summary
         </h3>
       </div>
-      <PersonalityTraitList traits={traits} />
+      <PersonalityDescriptorList traits={traits} />
     </div>
   );
 };
@@ -233,12 +234,12 @@ type ProfileContentProps = {
 const ProfileContent = ({ personality, profile }: ProfileContentProps) => {
   const adjs: string[] = profile?.adjectives;
   const elements: Element[] = profile?.mostEndorsedElements;
-  const descriptors: Trait[] = personality.summaryTableRows.map((row) => {
-    let values: TraitValue[] = row.values.map((v) => {
+  const descriptors: Descriptor[] = personality.summaryTableRows.map((row) => {
+    let values: DescriptorValue[] = row.values.map((v) => {
       return { text: v.text, highlighted: v.isHighlighted };
     });
 
-    return { traitName: row.title, traitValues: values };
+    return { name: row.title, values: values };
   });
 
   return (
@@ -291,26 +292,68 @@ interface UserPersonalityResponse {
   summaryTableRows: SummaryTableRow[];
 }
 
+type SuspenseLoaderProps = {
+  message: string;
+};
+
+const SuspenseLoader = ({ message }: SuspenseLoaderProps) => {
+  return <div className="text-white">{message}</div>;
+};
+
 const Profile = () => {
   const [profile, setProfile] = useState<UserProfileResponse>();
   const [personality, setPersonality] = useState<UserPersonalityResponse>();
+  const [error, setError] = useState();
 
+  // Fetch profile
+  // componentDidMount
   useEffect(() => {
-    setProfile(ProfileFixture[0]);
-    setPersonality(PersonalityFixture);
+    const profileURL = BaseURL + ListProfiles;
+    fetch(profileURL)
+      .then((r) => r.json())
+      .then((r) => {
+        console.log("Fetched profile");
+        // Single profile
+        setProfile(r[0]);
+      })
+      .catch((err) => {
+        console.error(`Error fetching Profile:`, err);
+        setError(err);
+      });
   }, []);
 
+  // Fetch personality
+  // Triggers on each profile change
+  useEffect(() => {
+    if (profile === undefined) return;
+
+    const personalityUrl = BaseURL + GetProfileSummary(profile!.id);
+    fetch(personalityUrl)
+      .then((r) => r.json())
+      .then((r) => {
+        console.log("Fetched personality");
+        // Single profile
+        setPersonality(r);
+      })
+      .catch((err) => {
+        console.error(`Error fetching personality:`, err);
+        setError(err);
+      });
+  }, [profile]);
+
   return (
-    <Provider url={BaseURL}>
-      <Suspense fallback="Loading...">
-        {profile && personality && (
-          <div className="md:grid md:grid-cols-4 md:gap-5 px-5 z-0">
-            <ProfileBio description={profile.description} />
-            <ProfileContent personality={personality} profile={profile} />
-          </div>
-        )}
-      </Suspense>
-    </Provider>
+    <Suspense fallback={SuspenseLoader}>
+      {error && (
+        <p className="bg-red text-white">Error fetching profile: {error}</p>
+      )}
+
+      {profile && personality && (
+        <div className="md:grid md:grid-cols-4 md:gap-5 px-5 z-0">
+          <ProfileBio description={profile.description} />
+          <ProfileContent personality={personality} profile={profile} />
+        </div>
+      )}
+    </Suspense>
   );
 };
 

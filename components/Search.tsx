@@ -1,5 +1,6 @@
+import { warn } from "console";
 import { useEffect, useState, useRef, useCallback } from "react";
-import { TraitFixture } from "../fixtures";
+import { BaseURL, ListTraits } from "../utils/urls";
 
 import { Element } from "../pages/index";
 
@@ -8,17 +9,43 @@ const SearchBar = () => {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(false);
   const [results, setResults] = useState([]);
+  const [traits, setTraits] = useState([]);
+  const [error, setError] = useState([]);
 
-  const mockSearch = (query: string) => {
-    //FIXME: this doesn't work
-		try {
-		const regex = new RegExp(query, 'i')
-    const results =  TraitFixture.filter((t) => t.name.match(regex))
-		return results
-		} catch {
-			console.error("Failed to compile regex")
-			return []
-		}
+  // Effect that queries the backend for traits
+  // each time the search bar query. This is
+  // not necessary for the MVP, but how it would
+  // act in principle
+  useEffect(() => {
+    const traitsURL = BaseURL + ListTraits;
+
+    fetch(traitsURL)
+      .then((r) => r.json())
+      .then((r) => {
+        console.log("Fetched traits");
+        // Single traits
+        setTraits(r);
+      })
+      .catch((err) => {
+        console.error(`Error fetching traits:`, err);
+        setError(err);
+      });
+  }, [query]);
+
+  const filterTraits = (query: string) => {
+    if (traits === undefined) return [];
+
+    try {
+      const regex = new RegExp(query, "i");
+      const results = traits.filter((t: Element) => {
+        return t.name.match(regex);
+      });
+
+      return results;
+    } catch {
+      console.error("Failed to compile regex");
+      return [];
+    }
   };
 
   const onChange = useCallback((event) => {
@@ -26,7 +53,7 @@ const SearchBar = () => {
     setQuery(query);
 
     if (query.length) {
-      const res = mockSearch(query);
+      const res = filterTraits(query);
       setResults(res);
     } else {
       setResults([]);
@@ -47,7 +74,7 @@ const SearchBar = () => {
 
   const renderResults = (results: Element[]) => {
     return (
-      <div className="w-64 h-64 border-box border-2 bg-black overflow-y-auto">
+      <div className="w-72 h-64 border-box border-2 bg-black overflow-y-auto">
         <ul className="py-2 px-2 bg-black">
           {results.map(
             ({ name, colorHexCodes, score }: Element, index: number) => (
@@ -64,13 +91,14 @@ const SearchBar = () => {
   return (
     <div className="z-10 drop-shadow-sm" ref={searchRef}>
       <input
-        className="w-64 h-8 px-2"
+        className="w-72 h-8 px-2"
         onChange={onChange}
         onFocus={onFocus}
         placeholder="Search"
         type="text"
         value={query}
       />
+      {error && <div>{error}</div>}
       {active && results.length > 0 && renderResults(results)}
     </div>
   );
