@@ -1,5 +1,5 @@
-import React from "react"
-import { PersonalitySummaryTableProps, Descriptor } from "../types/types"
+import React from "react";
+import { PersonalitySummaryTableProps, Descriptor } from "../types/types";
 import PersonalityDescriptorCell from "./PersonalityDescriptorCell";
 
 const PersonalityDescriptorList = ({

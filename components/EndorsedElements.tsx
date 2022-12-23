@@ -1,6 +1,6 @@
-import React from "react"
-import ElementCell from "./ElementCell"
-import { Element, EndorsedElementsGridProps } from "../types/types"
+import React from "react";
+import ElementCell from "./ElementCell";
+import { Element, EndorsedElementsGridProps } from "../types/types";
 
 const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
   const renderCells = (elements: Element[]) => {
@@ -32,4 +32,4 @@ const EndorsedElements = ({ elements }: EndorsedElementsGridProps) => {
   );
 };
 
-export default EndorsedElements
+export default EndorsedElements;

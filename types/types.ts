@@ -1,12 +1,12 @@
-type ProfileSummaryProps = {
+export type ProfileSummaryProps = {
   description: string;
 };
 
-type ProfileImageProps = {
+export type ProfileImageProps = {
   src: string;
 };
 
-interface UserProfileResponse {
+export interface UserProfileResponse {
   description: string;
   userName: string;
   profileUrl: string;
@@ -15,97 +15,71 @@ interface UserProfileResponse {
   mostEndorsedElements: Element[];
 }
 
-interface SummaryTableValue {
+export interface SummaryTableValue {
   text: string;
   isHighlighted: boolean;
 }
 
-interface SummaryTableRow {
+export interface SummaryTableRow {
   title: string;
   values: SummaryTableValue[];
 }
 
-interface UserPersonalityResponse {
+export interface UserPersonalityResponse {
   summaryTableRows: SummaryTableRow[];
 }
 
-type ProfileHeaderProps = {
+export type ProfileHeaderProps = {
   userName: string;
   profileUrl: string;
 };
 
-type ProfileContentProps = {
+export type ProfileContentProps = {
   profile: UserProfileResponse;
   personality: UserPersonalityResponse;
 };
 
-type AdjectivesListProps = {
+export type AdjectivesListProps = {
   adjectives: string[];
 };
 
-type PersonalitySummaryTableProps = {
+export type PersonalitySummaryTableProps = {
   traits: Descriptor[];
 };
 
-
-type PersonalityDescriptorCellProps = {
+export type PersonalityDescriptorCellProps = {
   trait: Descriptor;
 };
 
-interface DescriptorValue {
+export interface DescriptorValue {
   text: string;
   highlighted: boolean;
 }
 
-interface Descriptor {
+export interface Descriptor {
   name: string;
   values: DescriptorValue[];
 }
 
-interface Element {
+export interface Element {
   name: string;
   colorHexCodes: string[];
   score: number | null;
 }
 
-type EndorsedElementsGridProps = {
+export type EndorsedElementsGridProps = {
   elements: Element[];
 };
 
-
-type ElementCellProps = {
+export type ElementCellProps = {
   fill: string;
   element: string;
 };
 
-
-type ElementSVGProps = {
+export type ElementSVGProps = {
   fill: string;
 };
 
-
-type SuspenseLoaderProps = {
+export type SuspenseLoaderProps = {
   message: string;
 };
-
-export {
-	SuspenseLoaderProps,
-	ElementSVGProps, 
-	ElementCellProps, 
-	Element,
-	EndorsedElementsGridProps, 
-	PersonalitySummaryTableProps, 
-	UserProfileResponse, 
-	UserPersonalityResponse,
-	ProfileImageProps,
-	ProfileHeaderProps,
-	ProfileSummaryProps,
-	ProfileContentProps,
-	AdjectivesListProps,
-	PersonalityDescriptorCellProps, 
-	DescriptorValue,
-	Descriptor,
-	SummaryTableRow,
-	SummaryTableValue
-}
-

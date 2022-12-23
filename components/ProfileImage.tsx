@@ -1,6 +1,6 @@
-import React from "react"
-import { ProfileImageProps } from "../types/types"
-import Image from "next/image"
+import React from "react";
+import { ProfileImageProps } from "../types/types";
+import Image from "next/image";
 
 const ProfileImage = ({ src }: ProfileImageProps) => {
   return (
@@ -10,10 +10,10 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
         width="150"
         height="150"
         className="rounded-full shadow-sm"
-        alt=""
+        alt="profile"
       />
     </div>
   );
-}
+};
 
-export default ProfileImage
+export default ProfileImage;

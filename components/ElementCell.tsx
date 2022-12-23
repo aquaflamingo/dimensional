@@ -1,6 +1,6 @@
-import React from "react"
-import ElementSVG from "./ElementSVG"
-import { ElementCellProps } from "../types/types"
+import React from "react";
+import ElementSVG from "./ElementSVG";
+import { ElementCellProps } from "../types/types";
 
 const ElementCell = ({ element, fill }: ElementCellProps) => {
   return (

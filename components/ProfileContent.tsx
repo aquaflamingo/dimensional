@@ -1,5 +1,10 @@
-import React from "react"
-import { ProfileContentProps, Element, DescriptorValue, Descriptor } from "../types/types"
+import React from "react";
+import {
+  ProfileContentProps,
+  Element,
+  DescriptorValue,
+  Descriptor,
+} from "../types/types";
 import AdjectivesList from "./AdjectivesList";
 import PersonalitySummaryTable from "./PersonaltiySummaryTable";
 import EndorsedElements from "./EndorsedElements";
@@ -30,4 +35,3 @@ const ProfileContent = ({ personality, profile }: ProfileContentProps) => {
 };
 
 export default ProfileContent;
-

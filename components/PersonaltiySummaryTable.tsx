@@ -1,5 +1,5 @@
-import React from "react"
-import { PersonalitySummaryTableProps } from "../types/types"
+import React from "react";
+import { PersonalitySummaryTableProps } from "../types/types";
 import PersonalityDescriptorList from "./PersonalityDescriptorList";
 
 const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
@@ -15,4 +15,4 @@ const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
   );
 };
 
-export default PersonalitySummaryTable
+export default PersonalitySummaryTable;

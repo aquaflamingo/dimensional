@@ -4,17 +4,16 @@ import { BaseURL, ListTraits } from "../utils/urls";
 import { Element } from "../types/types";
 
 const SearchBar = () => {
-  const searchRef = useRef(null);
+  const searchRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(false);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Element[]>();
   const [traits, setTraits] = useState([]);
   const [error, setError] = useState([]);
 
   // Effect that queries the backend for traits
-  // each time the search bar query. This is
-  // not necessary for the MVP, but how it would
-  // act in principle
+  // each time the search bar becomes active. This is
+  // not necessary for the MVP, but you would query the backend every time the query changes
   useEffect(() => {
     const traitsURL = BaseURL + ListTraits;
 
@@ -29,42 +28,40 @@ const SearchBar = () => {
         console.error(`Error fetching traits:`, err);
         setError(err);
       });
-  }, [query]);
+  }, [active]);
 
-  const filterTraits = (query: string) => {
-    if (traits === undefined) return [];
+  const onChange = useCallback(
+    (event: any) => {
+      const query = event.target.value;
+      setQuery(query);
 
-    try {
-      const regex = new RegExp(query, "i");
-      const results = traits.filter((t: Element) => {
-        return t.name.match(regex);
-      });
+      if (query.length) {
+        let res: Element[] = [];
 
-      return results;
-    } catch {
-      console.error("Failed to compile regex");
-      return [];
-    }
-  };
+        try {
+          const regex = new RegExp(query, "i");
+          res = traits.filter((t: Element) => {
+            return t.name.match(regex);
+          });
+        } catch (err) {
+          console.error(err);
+          setResults(undefined);
+        }
 
-  const onChange = useCallback((event) => {
-    const query = event.target.value;
-    setQuery(query);
-
-    if (query.length) {
-      const res = filterTraits(query);
-      setResults(res);
-    } else {
-      setResults([]);
-    }
-  }, []);
+        setResults(res);
+      } else {
+        setResults(undefined);
+      }
+    },
+    [traits]
+  );
 
   const onFocus = useCallback(() => {
     setActive(true);
     window.addEventListener("click", onClick);
   }, []);
 
-  const onClick = useCallback((event) => {
+  const onClick = useCallback((event: any) => {
     if (searchRef.current && !searchRef.current.contains(event.target)) {
       setActive(false);
       window.removeEventListener("click", onClick);
@@ -78,7 +75,7 @@ const SearchBar = () => {
           {results.map(
             ({ name, colorHexCodes, score }: Element, index: number) => (
               <li className="list-none" key={index}>
-                <TraitCell name={name} score={score} />
+                <TraitCell name={name} score={score!} />
               </li>
             )
           )}
@@ -98,15 +95,15 @@ const SearchBar = () => {
         value={query}
       />
       {error && <div>{error}</div>}
-      {active && results.length > 0 && renderResults(results)}
+      {active && results && results.length > 0 && renderResults(results)}
     </div>
   );
 };
 
 type TraitCellProps = {
-	name: string 
-	score: string
-}
+  name: string;
+  score: number;
+};
 
 const TraitCell = ({ name, score }: TraitCellProps) => {
   return (

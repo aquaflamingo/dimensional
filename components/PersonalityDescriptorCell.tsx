@@ -1,15 +1,26 @@
-import React from "react"
-import { PersonalityDescriptorCellProps, DescriptorValue } from "../types/types"
+import React from "react";
+import {
+  PersonalityDescriptorCellProps,
+  DescriptorValue,
+} from "../types/types";
 
 const PersonalityDescriptorCell = ({
   trait,
 }: PersonalityDescriptorCellProps) => {
   const renderDescriptorValue = (tv: DescriptorValue[]) => {
-    let results = tv.map((tv: DescriptorValue) => {
+    let results = tv.map((tv: DescriptorValue, index: number) => {
       if (!tv.highlighted) {
-        return <span className="text-gray-500">{tv.text} </span>;
+        return (
+          <span key={index} className="text-gray-500">
+            {tv.text}{" "}
+          </span>
+        );
       } else {
-        return <span className="decoration-white">{tv.text} </span>;
+        return (
+          <span key={index} className="decoration-white">
+            {tv.text}{" "}
+          </span>
+        );
       }
     });
 
@@ -28,4 +39,4 @@ const PersonalityDescriptorCell = ({
   );
 };
 
-export default PersonalityDescriptorCell
+export default PersonalityDescriptorCell;

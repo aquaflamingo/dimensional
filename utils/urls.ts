@@ -1,9 +1,7 @@
-const BaseURL =
+export const BaseURL =
   "https://us-central1-dimensional-test-9f5ab.cloudfunctions.net/app/";
 
-const ListProfiles = `profiles`;
-const GetProfileSummary = (id: string) => `personalitySummaries/${id}`;
+export const ListProfiles = `profiles`;
+export const GetProfileSummary = (id: string) => `personalitySummaries/${id}`;
 
-const ListTraits = `traits`;
-
-export { ListTraits, ListProfiles, GetProfileSummary, BaseURL };
+export const ListTraits = `traits`;

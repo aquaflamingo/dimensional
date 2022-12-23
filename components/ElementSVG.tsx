@@ -1,5 +1,5 @@
-import React from "react"
-import { ElementSVGProps } from "../types/types"
+import React from "react";
+import { ElementSVGProps } from "../types/types";
 
 const ElementSVG = ({ fill }: ElementSVGProps) => {
   return (

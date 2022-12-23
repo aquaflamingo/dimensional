@@ -1,6 +1,6 @@
-import React, {useState, useEffect, Suspense} from "react"
-import { UserProfileResponse, UserPersonalityResponse } from "../types/types"
-import { BaseURL, GetProfileSummary, ListProfiles} from "../utils/urls";
+import React, { useState, useEffect, Suspense } from "react";
+import { UserProfileResponse, UserPersonalityResponse } from "../types/types";
+import { BaseURL, GetProfileSummary, ListProfiles } from "../utils/urls";
 import SuspenseLoader from "./SuspenseLoader";
 import ProfileBio from "./ProfileBio";
 import ProfileContent from "./ProfileContent";
@@ -47,7 +47,7 @@ const Profile = () => {
   }, [profile]);
 
   return (
-    <Suspense fallback={<SuspenseLoader message="Loading please wait..."/>}>
+    <Suspense fallback={<SuspenseLoader message="Loading please wait..." />}>
       {error && (
         <p className="bg-red text-white">Error fetching profile: {error}</p>
       )}
@@ -62,4 +62,4 @@ const Profile = () => {
   );
 };
 
-export default Profile
+export default Profile;

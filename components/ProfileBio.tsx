@@ -1,6 +1,6 @@
-import React from "react"
-import { ProfileSummaryProps } from "../types/types"
-import ProfileImage from "./ProfileImage"
+import React from "react";
+import { ProfileSummaryProps } from "../types/types";
+import ProfileImage from "./ProfileImage";
 
 const ProfileBio = ({ description }: ProfileSummaryProps) => {
   // None given in the API
@@ -16,4 +16,4 @@ const ProfileBio = ({ description }: ProfileSummaryProps) => {
   );
 };
 
-export default ProfileBio
+export default ProfileBio;

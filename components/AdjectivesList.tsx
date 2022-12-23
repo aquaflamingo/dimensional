@@ -1,5 +1,5 @@
-import React from "react"
-import { AdjectivesListProps } from "../types/types"
+import React from "react";
+import { AdjectivesListProps } from "../types/types";
 
 const AdjectivesList = ({ adjectives }: AdjectivesListProps) => {
   return (
@@ -14,4 +14,4 @@ const AdjectivesList = ({ adjectives }: AdjectivesListProps) => {
   );
 };
 
-export default AdjectivesList
+export default AdjectivesList;

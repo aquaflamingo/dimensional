@@ -1,5 +1,5 @@
-import React from "react"
-import { ProfileHeaderProps } from "../types/types"
+import React from "react";
+import { ProfileHeaderProps } from "../types/types";
 
 const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
   return (
