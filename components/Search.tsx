@@ -1,8 +1,7 @@
-import { warn } from "console";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { BaseURL, ListTraits } from "../utils/urls";
 
-import { Element } from "../pages/index";
+import { Element } from "../types/types";
 
 const SearchBar = () => {
   const searchRef = useRef(null);
@@ -103,6 +102,11 @@ const SearchBar = () => {
     </div>
   );
 };
+
+type TraitCellProps = {
+	name: string 
+	score: string
+}
 
 const TraitCell = ({ name, score }: TraitCellProps) => {
   return (

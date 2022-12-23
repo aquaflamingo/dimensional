@@ -1,3 +1,6 @@
+import React from "react"
+import { ElementSVGProps } from "../types/types"
+
 const ElementSVG = ({ fill }: ElementSVGProps) => {
   return (
     <div className="flex w-full justify-center">
@@ -14,3 +17,5 @@ const ElementSVG = ({ fill }: ElementSVGProps) => {
     </div>
   );
 };
+
+export default ElementSVG;

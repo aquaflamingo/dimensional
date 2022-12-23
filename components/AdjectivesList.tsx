@@ -1,3 +1,6 @@
+import React from "react"
+import { AdjectivesListProps } from "../types/types"
+
 const AdjectivesList = ({ adjectives }: AdjectivesListProps) => {
   return (
     <div>
@@ -10,3 +13,5 @@ const AdjectivesList = ({ adjectives }: AdjectivesListProps) => {
     </div>
   );
 };
+
+export default AdjectivesList

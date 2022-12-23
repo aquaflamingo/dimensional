@@ -1,3 +1,7 @@
+import React from "react"
+import { PersonalitySummaryTableProps } from "../types/types"
+import PersonalityDescriptorList from "./PersonalityDescriptorList";
+
 const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
   return (
     <div>
@@ -6,7 +10,9 @@ const PersonalitySummaryTable = ({ traits }: PersonalitySummaryTableProps) => {
           Personality Summary
         </h3>
       </div>
-      <PersonalityTraitList traits={traits} />
+      <PersonalityDescriptorList traits={traits} />
     </div>
   );
 };
+
+export default PersonalitySummaryTable

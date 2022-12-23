@@ -1,12 +1,19 @@
+import React from "react"
+import { ProfileContentProps, Element, DescriptorValue, Descriptor } from "../types/types"
+import AdjectivesList from "./AdjectivesList";
+import PersonalitySummaryTable from "./PersonaltiySummaryTable";
+import EndorsedElements from "./EndorsedElements";
+import ProfileHeader from "./ProfileHeader";
+
 const ProfileContent = ({ personality, profile }: ProfileContentProps) => {
   const adjs: string[] = profile?.adjectives;
   const elements: Element[] = profile?.mostEndorsedElements;
-  const descriptors: Trait[] = personality.summaryTableRows.map((row) => {
-    let values: TraitValue[] = row.values.map((v) => {
+  const descriptors: Descriptor[] = personality.summaryTableRows.map((row) => {
+    let values: DescriptorValue[] = row.values.map((v) => {
       return { text: v.text, highlighted: v.isHighlighted };
     });
 
-    return { traitName: row.title, traitValues: values };
+    return { name: row.title, values: values };
   });
 
   return (
@@ -21,3 +28,6 @@ const ProfileContent = ({ personality, profile }: ProfileContentProps) => {
     </div>
   );
 };
+
+export default ProfileContent;
+

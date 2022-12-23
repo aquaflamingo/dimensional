@@ -35,7 +35,6 @@ type ProfileHeaderProps = {
 };
 
 type ProfileContentProps = {
-  // TODO
   profile: UserProfileResponse;
   personality: UserPersonalityResponse;
 };
@@ -45,24 +44,23 @@ type AdjectivesListProps = {
 };
 
 type PersonalitySummaryTableProps = {
-  traits: Trait[];
+  traits: Descriptor[];
 };
 
 
-interface TraitValue {
+type PersonalityDescriptorCellProps = {
+  trait: Descriptor;
+};
+
+interface DescriptorValue {
   text: string;
   highlighted: boolean;
 }
 
-interface Trait {
-  traitName: string;
-  traitValues: TraitValue[];
+interface Descriptor {
+  name: string;
+  values: DescriptorValue[];
 }
-
-type PersonalityTraitCellProps = {
-  trait: Trait;
-};
-
 
 interface Element {
   name: string;
@@ -85,22 +83,28 @@ type ElementSVGProps = {
   fill: string;
 };
 
+
+type SuspenseLoaderProps = {
+  message: string;
+};
+
 export {
+	SuspenseLoaderProps,
 	ElementSVGProps, 
 	ElementCellProps, 
 	Element,
 	EndorsedElementsGridProps, 
-	PersonalityTraitCellProps,
 	PersonalitySummaryTableProps, 
 	UserProfileResponse, 
 	UserPersonalityResponse,
-	Trait,
-	TraitValue,
 	ProfileImageProps,
 	ProfileHeaderProps,
 	ProfileSummaryProps,
 	ProfileContentProps,
 	AdjectivesListProps,
+	PersonalityDescriptorCellProps, 
+	DescriptorValue,
+	Descriptor,
 	SummaryTableRow,
 	SummaryTableValue
 }

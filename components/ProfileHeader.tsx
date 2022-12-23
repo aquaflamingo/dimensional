@@ -1,3 +1,6 @@
+import React from "react"
+import { ProfileHeaderProps } from "../types/types"
+
 const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
   return (
     <div className="space-y-1">
@@ -6,3 +9,5 @@ const ProfileHeader = ({ userName, profileUrl }: ProfileHeaderProps) => {
     </div>
   );
 };
+
+export default ProfileHeader;

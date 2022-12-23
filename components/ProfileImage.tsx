@@ -1,3 +1,7 @@
+import React from "react"
+import { ProfileImageProps } from "../types/types"
+import Image from "next/image"
+
 const ProfileImage = ({ src }: ProfileImageProps) => {
   return (
     <div className="justify-center w-full py-5 flex">
@@ -10,4 +14,6 @@ const ProfileImage = ({ src }: ProfileImageProps) => {
       />
     </div>
   );
-};
+}
+
+export default ProfileImage
