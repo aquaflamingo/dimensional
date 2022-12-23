@@ -1,1 +1,37 @@
-[{"description":"Head of comms @sqare. Hater of small dogs. Lover of pasta. IG:sullman","userName":"Stephanie Ulman","profileUrl":"https://dmsl.me/stephu","adjectives":["Sentimental","logical","joyful","emotionally stable","open-minded","playful","morally-minded","socially-intelligent","emotional"],"id":"612cd475-a1f8-4bdf-bf58-091916681665","mostEndorsedElements":[{"name":"Capacity for Love","colorHexCodes":["#00E1FF"],"score":0.161},{"name":"Fantasy","colorHexCodes":["#98FF9C"],"score":0.869},{"name":"Achievement","colorHexCodes":["#F271BD"],"score":0.457},{"name":"Analytical Thinking","colorHexCodes":["#D1FFAD"],"score":0.872},{"name":"Creativity","colorHexCodes":["#37FF3F"],"score":0.211},{"name":"Teamwork","colorHexCodes":["#FFC700"],"score":0.201},{"name":"Gratitude","colorHexCodes":["#37C2D4"],"score":0.085},{"name":"Hope","colorHexCodes":["#48C6B7"],"score":0.175}]}]
+[
+  {
+    "description": "Head of comms @sqare. Hater of small dogs. Lover of pasta. IG:sullman",
+    "userName": "Stephanie Ulman",
+    "profileUrl": "https://dmsl.me/stephu",
+    "adjectives": [
+      "Sentimental",
+      "logical",
+      "joyful",
+      "emotionally stable",
+      "open-minded",
+      "playful",
+      "morally-minded",
+      "socially-intelligent",
+      "emotional"
+    ],
+    "id": "612cd475-a1f8-4bdf-bf58-091916681665",
+    "mostEndorsedElements": [
+      {
+        "name": "Capacity for Love",
+        "colorHexCodes": ["#00E1FF"],
+        "score": 0.161
+      },
+      { "name": "Fantasy", "colorHexCodes": ["#98FF9C"], "score": 0.869 },
+      { "name": "Achievement", "colorHexCodes": ["#F271BD"], "score": 0.457 },
+      {
+        "name": "Analytical Thinking",
+        "colorHexCodes": ["#D1FFAD"],
+        "score": 0.872
+      },
+      { "name": "Creativity", "colorHexCodes": ["#37FF3F"], "score": 0.211 },
+      { "name": "Teamwork", "colorHexCodes": ["#FFC700"], "score": 0.201 },
+      { "name": "Gratitude", "colorHexCodes": ["#37C2D4"], "score": 0.085 },
+      { "name": "Hope", "colorHexCodes": ["#48C6B7"], "score": 0.175 }
+    ]
+  }
+]

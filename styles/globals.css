@@ -5,6 +5,6 @@
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
-		backgroundColor: #181616
+    backgroundcolor: #181616;
   }
 }
